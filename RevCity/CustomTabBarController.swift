@@ -35,7 +35,7 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         super.viewDidLoad()
         
         self.delegate = self
-
+        
         // make unselected icons black
         self.tabBar.unselectedItemTintColor = UIColor(colorLiteralRed: 40/255, green: 40/255, blue: 40/255, alpha: 1)
         
@@ -46,14 +46,5 @@ class CustomTabBarController: UITabBarController, UITabBarControllerDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+    
 }

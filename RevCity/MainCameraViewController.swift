@@ -11,7 +11,7 @@ import AVFoundation
 import CoreMedia
 
 class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureFileOutputRecordingDelegate {
-
+    
     
     // MARK: Camera Outlets
     @IBOutlet weak var cameraPreview: UIView!
@@ -21,7 +21,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     
     // On-Screen UI Elements
     private var circleShutter: UIView = UIView(frame: CGRect(x: 135, y: 498, width: 105, height: 105))
-
+    
     // Camera Inputs/Outputs
     private var cameraView: AVCaptureVideoPreviewLayer!
     private var camera: AVCaptureDevice!
@@ -46,7 +46,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     private let cameraVideoOutput = AVCaptureMovieFileOutput()
     private let cameraStateBar = UIView()
     private let cameraProgress = CAShapeLayer()
-
+    
     
     
     // MARK: Camera Setup
@@ -93,7 +93,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         cameraSession.startRunning()
         
         startContinuousFocusExposure()
-
+        
     }
     
     // MARK: Camera Button Actions
@@ -179,7 +179,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             print("Video camera state selected")
         }
     }
-
+    
     @IBOutlet weak var cameraShutter: UIButton!
     @IBAction func cameraShutter(_ sender: UIButton) {
         // Take a Photo
@@ -197,11 +197,11 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         
         // Take a Video (video preselected)
         if videoCamera.alpha == 1 {
-//            if self.cameraVideoOutput.isRecording { self.cameraVideoOutput.stopRecording() }
-//            else {
-//                self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
-//                self.cameraVideoOutput.startRecording(toOutputFileURL: URL(fileURLWithPath: self.videoFileLocation()), recordingDelegate: self)
-//            }
+            //            if self.cameraVideoOutput.isRecording { self.cameraVideoOutput.stopRecording() }
+            //            else {
+            //                self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
+            //                self.cameraVideoOutput.startRecording(toOutputFileURL: URL(fileURLWithPath: self.videoFileLocation()), recordingDelegate: self)
+            //            }
             //self.createCameraProgress()
             self.animateCameraProgressStatus()
             self.animateRecordingButton()
@@ -293,7 +293,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         
         print("Camera capture session ended")
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -325,7 +325,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
                 }
             }
         }
-            else {
+        else {
             print("Error capturing photo: \(error)")
             return
         }
@@ -425,7 +425,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     @objc private func handlePinch(recognizer: UIPinchGestureRecognizer) {
         let camera: AVCaptureDevice = self.camera
         do {
-           try camera.lockForConfiguration()
+            try camera.lockForConfiguration()
             switch recognizer.state {
             case .began : self.startingZoom = camera.videoZoomFactor
             case .changed :
@@ -519,14 +519,14 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         view.layer.addSublayer(cameraProgress)
     }
     
-//    private func createCameraProgressStatus() {
-//        cameraProgress.path = shutterProgressPath.cgPath
-//        cameraProgress.fillColor = UIColor.clear.cgColor
-//        cameraProgress.strokeColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0).cgColor
-//        cameraProgress.lineWidth = 5.0
-//        cameraProgress.strokeEnd = 0.0
-//        circleShutter.layer.addSublayer(cameraProgress)
-//    }
+    //    private func createCameraProgressStatus() {
+    //        cameraProgress.path = shutterProgressPath.cgPath
+    //        cameraProgress.fillColor = UIColor.clear.cgColor
+    //        cameraProgress.strokeColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0).cgColor
+    //        cameraProgress.lineWidth = 5.0
+    //        cameraProgress.strokeEnd = 0.0
+    //        circleShutter.layer.addSublayer(cameraProgress)
+    //    }
     
     private func animateCameraProgressStatus() {
         let animation = CABasicAnimation(keyPath: "strokeEnd")
@@ -550,7 +550,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         view.addSubview(cameraStateBar)
     }
     
-
+    
 }
 
 extension UIView {
@@ -563,12 +563,12 @@ extension UIView {
 }
 
 class CameraProgress: UIView {
-    let progressLayer: CAShapeLayer!
+    var progressLayer: CAShapeLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.clear
-        let progressPath = UIBezierPath(arcCenter: cameraShutter.center, radius: 115 / 2, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true)
+        let progressPath = UIBezierPath(arcCenter: self.center, radius: 115 / 2, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true)
         progressLayer = CAShapeLayer()
         progressLayer.path = progressPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
@@ -578,5 +578,9 @@ class CameraProgress: UIView {
         layer.addSublayer(progressLayer)
     }
     
-    func animateProgress
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // func animateProgress
 }
