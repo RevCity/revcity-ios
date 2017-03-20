@@ -290,12 +290,14 @@
                                     <action selector="goBack:" destination="klW-vY-eoj" eventType="touchUpInside" id="yVs-0y-hp2"/>
                                 </connections>
                             </button>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Yi-oZ-5Nh">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </view>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uVH-tX-FC2">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zi7-eK-Ecs">
+                                <rect key="frame" x="202" y="15" width="45" height="45"/>
+                                <inset key="contentEdgeInsets" minX="1" minY="10" maxX="1" maxY="10"/>
+                                <state key="normal" image="AddTextCamera"/>
+                                <connections>
+                                    <action selector="openAddText:" destination="klW-vY-eoj" eventType="touchUpInside" id="Fyn-jC-wLU"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jS2-7U-MY0">
                                 <rect key="frame" x="263" y="15" width="45" height="45"/>
                                 <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
@@ -320,14 +322,12 @@
                                     <action selector="goPostAction:" destination="klW-vY-eoj" eventType="touchUpInside" id="lFO-We-jcb"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zi7-eK-Ecs">
-                                <rect key="frame" x="202" y="15" width="45" height="45"/>
-                                <inset key="contentEdgeInsets" minX="1" minY="10" maxX="1" maxY="10"/>
-                                <state key="normal" image="AddTextCamera"/>
-                                <connections>
-                                    <action selector="openAddText:" destination="klW-vY-eoj" eventType="touchUpInside" id="Fyn-jC-wLU"/>
-                                </connections>
-                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Yi-oZ-5Nh">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </view>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uVH-tX-FC2">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                            </imageView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
