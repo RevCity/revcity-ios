@@ -536,7 +536,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
 }
 
 // MARK: Capture Photo Delegate Methods
-extension MainCameraViewController: AVCapturePhotoCaptureDelegate {
+extension MainCameraViewController {
     
     func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
         if let photoSampleBuffer = photoSampleBuffer {
@@ -569,7 +569,7 @@ extension MainCameraViewController: AVCapturePhotoCaptureDelegate {
 }
 
 // MARK: Capture Video Delegate Methods
-extension MainCameraViewController: AVCaptureFileOutputRecordingDelegate {
+extension MainCameraViewController {
     
     func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
         return
