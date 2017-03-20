@@ -10,8 +10,10 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 
+/* View presented when a user is not logged in */
 class LoginViewController: UIViewController {
     
+    /** Required **/
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -20,6 +22,12 @@ class LoginViewController: UIViewController {
         if let accessToken = AccessToken.current {
             print(" We are logged in with access token \(accessToken)")
         }
+    }
+    
+    
+    /** Required **/
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
     }
     
     
@@ -39,12 +47,6 @@ class LoginViewController: UIViewController {
     }
     
     
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
     /** Facebook Login button clicked -> react accordingly **/
     func fbLoginButtonClicked() {
         let loginManager = LoginManager()
@@ -59,6 +61,7 @@ class LoginViewController: UIViewController {
             }
         }
     }
+    
     
     /** Handle state-changes resulting from successful FB login **/
     func successfulFBLogin() {
