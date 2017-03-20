@@ -296,20 +296,60 @@
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="uVH-tX-FC2">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jS2-7U-MY0">
+                                <rect key="frame" x="263" y="15" width="45" height="45"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal" image="DrawCamera"/>
+                                <connections>
+                                    <action selector="openDrawBrush:" destination="klW-vY-eoj" eventType="touchUpInside" id="YTe-ww-MPj"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="pcN-0w-fMj">
+                                <rect key="frame" x="315" y="15" width="45" height="45"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal" image="TagCamera"/>
+                                <connections>
+                                    <action selector="openTags:" destination="klW-vY-eoj" eventType="touchUpInside" id="Yz1-xq-unI"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DNh-9E-6Km">
+                                <rect key="frame" x="303" y="595" width="45" height="45"/>
+                                <inset key="contentEdgeInsets" minX="10" minY="10" maxX="10" maxY="10"/>
+                                <state key="normal" image="ForwardArrowCamera"/>
+                                <connections>
+                                    <action selector="goPostAction:" destination="klW-vY-eoj" eventType="touchUpInside" id="lFO-We-jcb"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Zi7-eK-Ecs">
+                                <rect key="frame" x="202" y="15" width="45" height="45"/>
+                                <inset key="contentEdgeInsets" minX="1" minY="10" maxX="1" maxY="10"/>
+                                <state key="normal" image="AddTextCamera"/>
+                                <connections>
+                                    <action selector="openAddText:" destination="klW-vY-eoj" eventType="touchUpInside" id="Fyn-jC-wLU"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="uVH-tX-FC2" firstAttribute="bottom" secondItem="hXu-DH-NwI" secondAttribute="top" id="1sh-dy-WhD"/>
                             <constraint firstItem="0Yi-oZ-5Nh" firstAttribute="leading" secondItem="0a7-KB-TuF" secondAttribute="leading" id="1xR-fg-Whp"/>
                             <constraint firstItem="0a7-KB-TuF" firstAttribute="leading" secondItem="jyR-hJ-fDd" secondAttribute="leading" id="C1V-i4-Yda"/>
+                            <constraint firstItem="pcN-0w-fMj" firstAttribute="leading" secondItem="jS2-7U-MY0" secondAttribute="trailing" constant="7" id="F28-qc-Mk2"/>
+                            <constraint firstItem="hXu-DH-NwI" firstAttribute="top" secondItem="DNh-9E-6Km" secondAttribute="bottom" constant="27" id="HUh-nv-iXH"/>
+                            <constraint firstItem="jS2-7U-MY0" firstAttribute="leading" secondItem="Zi7-eK-Ecs" secondAttribute="trailing" constant="16" id="JZW-bK-eVG"/>
                             <constraint firstAttribute="trailing" secondItem="0a7-KB-TuF" secondAttribute="trailing" id="LKt-BW-4iB"/>
                             <constraint firstItem="mZc-b7-AqF" firstAttribute="leading" secondItem="jyR-hJ-fDd" secondAttribute="leading" constant="10" id="LWo-dF-sdK"/>
+                            <constraint firstAttribute="trailing" secondItem="pcN-0w-fMj" secondAttribute="trailing" constant="15" id="SW3-a5-VUG"/>
                             <constraint firstItem="uVH-tX-FC2" firstAttribute="leading" secondItem="0a7-KB-TuF" secondAttribute="leading" id="Scc-mk-7Da"/>
                             <constraint firstItem="0a7-KB-TuF" firstAttribute="top" secondItem="jyR-hJ-fDd" secondAttribute="top" id="UVq-0q-g16"/>
+                            <constraint firstItem="jS2-7U-MY0" firstAttribute="top" secondItem="Ooh-Gu-cNG" secondAttribute="bottom" constant="15" id="VF0-h2-xTM"/>
                             <constraint firstItem="mZc-b7-AqF" firstAttribute="top" secondItem="Ooh-Gu-cNG" secondAttribute="bottom" constant="13" id="XcI-BD-xvg"/>
                             <constraint firstItem="0Yi-oZ-5Nh" firstAttribute="bottom" secondItem="hXu-DH-NwI" secondAttribute="top" id="YOL-PL-F2n"/>
                             <constraint firstItem="uVH-tX-FC2" firstAttribute="top" secondItem="0Yi-oZ-5Nh" secondAttribute="top" id="Yfx-mB-OqS"/>
+                            <constraint firstItem="Zi7-eK-Ecs" firstAttribute="top" secondItem="Ooh-Gu-cNG" secondAttribute="bottom" constant="15" id="a6i-Uk-ivK"/>
                             <constraint firstItem="0Yi-oZ-5Nh" firstAttribute="trailing" secondItem="0a7-KB-TuF" secondAttribute="trailing" id="cc8-nv-e7Q"/>
+                            <constraint firstItem="pcN-0w-fMj" firstAttribute="top" secondItem="Ooh-Gu-cNG" secondAttribute="bottom" constant="15" id="jfm-gS-RZJ"/>
+                            <constraint firstAttribute="trailing" secondItem="DNh-9E-6Km" secondAttribute="trailing" constant="27" id="po2-AE-TM3"/>
                             <constraint firstItem="uVH-tX-FC2" firstAttribute="trailing" secondItem="0a7-KB-TuF" secondAttribute="trailing" id="tpC-9Q-usw"/>
                             <constraint firstItem="0Yi-oZ-5Nh" firstAttribute="top" secondItem="0a7-KB-TuF" secondAttribute="top" id="uLj-BN-Wer"/>
                             <constraint firstItem="0a7-KB-TuF" firstAttribute="bottom" secondItem="hXu-DH-NwI" secondAttribute="top" id="zr9-2Z-mXU"/>
@@ -317,35 +357,24 @@
                     </view>
                     <nil key="simulatedStatusBarMetrics"/>
                     <connections>
+                        <outlet property="addTags" destination="pcN-0w-fMj" id="KlU-WM-Dgs"/>
+                        <outlet property="addText" destination="Zi7-eK-Ecs" id="UMp-Ei-IMa"/>
                         <outlet property="blurImageResult" destination="uVH-tX-FC2" id="Fc9-z3-SqE"/>
                         <outlet property="blurView" destination="0Yi-oZ-5Nh" id="4XG-Vn-Oox"/>
+                        <outlet property="drawBrush" destination="jS2-7U-MY0" id="Fml-Fh-xEO"/>
+                        <outlet property="goPost" destination="DNh-9E-6Km" id="6fk-7c-cNZ"/>
                         <outlet property="imageView" destination="0a7-KB-TuF" id="hof-gY-wvO"/>
                         <outlet property="returnCamera" destination="mZc-b7-AqF" id="RI6-uW-5cl"/>
                         <outletCollection property="reviewButtons" destination="mZc-b7-AqF" collectionClass="NSMutableArray" id="gwU-IY-RGj"/>
+                        <outletCollection property="reviewButtons" destination="Zi7-eK-Ecs" collectionClass="NSMutableArray" id="Zfo-By-4E9"/>
+                        <outletCollection property="reviewButtons" destination="jS2-7U-MY0" collectionClass="NSMutableArray" id="rLX-15-8Vb"/>
+                        <outletCollection property="reviewButtons" destination="pcN-0w-fMj" collectionClass="NSMutableArray" id="hN6-D5-V76"/>
+                        <outletCollection property="reviewButtons" destination="DNh-9E-6Km" collectionClass="NSMutableArray" id="SK8-mP-qlV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o7i-hG-Akl" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2332" y="-315"/>
-        </scene>
-        <!--videoReviewVC-->
-        <scene sceneID="Npc-Nk-Mgd">
-            <objects>
-                <viewController storyboardIdentifier="VideoReviewVC" title="videoReviewVC" id="2eW-n5-2bN" customClass="VideoReviewViewController" customModule="RevCity" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="tXL-K4-njH"/>
-                        <viewControllerLayoutGuide type="bottom" id="4CA-iA-od6"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="LJc-TP-gq5">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <nil key="simulatedStatusBarMetrics"/>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4a9-sL-rdt" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2332" y="377"/>
+            <point key="canvasLocation" x="2321" y="0.0"/>
         </scene>
         <!--Chat-->
         <scene sceneID="Kho-CR-6GG">
@@ -416,16 +445,20 @@
         </scene>
     </scenes>
     <resources>
+        <image name="AddTextCamera" width="43" height="25"/>
         <image name="ChatTabBar" width="22" height="22"/>
         <image name="CloseCamera" width="25" height="25"/>
+        <image name="DrawCamera" width="25" height="25"/>
         <image name="ExploreTabBar" width="22" height="22"/>
         <image name="FlashOff" width="25" height="25"/>
         <image name="FlashOn" width="25" height="25"/>
+        <image name="ForwardArrowCamera" width="25" height="25"/>
         <image name="MeTabBar" width="22" height="22"/>
         <image name="PostTabBar" width="57" height="57"/>
         <image name="ReviewBack" width="14" height="22"/>
         <image name="SearchTabBar" width="22" height="22"/>
         <image name="ShutterCore" width="55" height="55"/>
         <image name="SwitchCamera" width="25" height="25"/>
+        <image name="TagCamera" width="25" height="25"/>
     </resources>
 </document>

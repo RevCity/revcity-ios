@@ -21,31 +21,32 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     
     // On-Screen UI Elements
     private var circleShutter: UIView = UIView(frame: CGRect(x: 135, y: 498, width: 105, height: 105))
+    private var progressCircle = CameraProgress(frame: CGRect(x: 130, y: 493, width: 115, height: 115))
     
     // Camera Inputs/Outputs
     private var cameraView: AVCaptureVideoPreviewLayer!
     private var camera: AVCaptureDevice!
     private var cameraInput: AVCaptureDeviceInput!
     private var photoOutput: AVCapturePhotoOutput!
-    private var videoOuput: AVCaptureMovieFileOutput!
+    private var videoOuput: AVCaptureMovieFileOutput? = nil
+    private var backgroundRecordingID: UIBackgroundTaskIdentifier? = nil
     private var startingZoom: CGFloat = 1
     private var pinchToZoomGesture: UIPinchGestureRecognizer?
     
     // Camera Background Variables
     private var photoSampleBuffer: CMSampleBuffer?
     private var previewPhotoSampleBuffer: CMSampleBuffer?
-    private var photoData: Data? = nil
-    private var outputFileLocation: URL?
+    var photoData: Data? = nil
+    var outputFileLocation: URL?
     
     override var prefersStatusBarHidden: Bool { return true }
     
     
     // MARK: Camera Constants
-    private let cameraSession = AVCaptureSession()
+    let cameraSession = AVCaptureSession()
     private let cameraPhotoOutput = AVCapturePhotoOutput()
     private let cameraVideoOutput = AVCaptureMovieFileOutput()
     private let cameraStateBar = UIView()
-    private let cameraProgress = CAShapeLayer()
     
     
     
@@ -95,6 +96,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         startContinuousFocusExposure()
         
     }
+    
     
     // MARK: Camera Button Actions
     
@@ -146,6 +148,13 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             moveCameraStateBar()
             cameraShutter.tintColor = UIColor(red: 1.00, green: 0.80, blue: 0.40, alpha: 1.0)
             print("Loop camera state selected")
+            cameraSession.beginConfiguration()
+            cameraSession.removeOutput(cameraVideoOutput)
+            if cameraSession.canAddOutput(cameraPhotoOutput) {
+                cameraSession.addOutput(cameraPhotoOutput)
+                toggleAudioInput()
+                cameraSession.commitConfiguration()
+            } else { print("Camera photo output already selected") }
         }
     }
     
@@ -154,7 +163,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     @IBAction func photoCamera(_ sender: UIButton) {
         let feedbackGenerator = UISelectionFeedbackGenerator()
         feedbackGenerator.selectionChanged()
-        if photoCamera.alpha == 1.0 { print("Loop camera state is already selected"); return }
+        if photoCamera.alpha == 1.0 { print("Photo camera state is already selected"); return }
         else {
             loopCamera.alpha = 0.5
             photoCamera.alpha = 1.0
@@ -162,6 +171,13 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             moveCameraStateBar()
             cameraShutter.tintColor = UIColor.white
             print("Photo camera state selected")
+            cameraSession.beginConfiguration()
+            cameraSession.removeOutput(cameraVideoOutput)
+            if cameraSession.canAddOutput(cameraPhotoOutput) {
+                cameraSession.addOutput(cameraPhotoOutput)
+                toggleAudioInput()
+                cameraSession.commitConfiguration()
+            } else { print("Camera photo output already selected") }
         }
     }
     
@@ -169,7 +185,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     @IBAction func videoCamera(_ sender: UIButton) {
         let feedbackGenerator = UISelectionFeedbackGenerator()
         feedbackGenerator.selectionChanged()
-        if videoCamera.alpha == 1.0 { print("Loop camera state is already selected"); return }
+        if videoCamera.alpha == 1.0 { print("Video camera state is already selected"); return }
         else {
             loopCamera.alpha = 0.5
             photoCamera.alpha = 0.5
@@ -177,6 +193,13 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             moveCameraStateBar()
             cameraShutter.tintColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0)
             print("Video camera state selected")
+            cameraSession.beginConfiguration()
+            cameraSession.removeOutput(cameraPhotoOutput)
+            if cameraSession.canAddOutput(cameraVideoOutput) {
+                cameraSession.addOutput(cameraVideoOutput)
+                toggleAudioInput()
+                cameraSession.commitConfiguration()
+            } else { print("Camera video output already selected") }
         }
     }
     
@@ -197,17 +220,19 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         
         // Take a Video (video preselected)
         if videoCamera.alpha == 1 {
-            //            if self.cameraVideoOutput.isRecording { self.cameraVideoOutput.stopRecording() }
-            //            else {
-            //                self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
-            //                self.cameraVideoOutput.startRecording(toOutputFileURL: URL(fileURLWithPath: self.videoFileLocation()), recordingDelegate: self)
-            //            }
-            //self.createCameraProgress()
-            self.animateCameraProgressStatus()
+//            if self.cameraVideoOutput.isRecording { self.cameraVideoOutput.stopRecording() }
+//            else {
+//                //let videoURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+//                //let videoFilePath = videoURL.appendingPathComponent("temp")
+//                self.cameraVideoOutput.connection(withMediaType: AVMediaTypeVideo).videoOrientation = self.VideoOrientation()
+//                self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
+//                self.cameraVideoOutput.startRecording(toOutputFileURL: URL(fileURLWithPath: self.videoFileLocation()),
+//                                                      recordingDelegate: self)
+//            }
+            progressCircle.animateProgress(duration: 60, fromValue: 0, toValue: 1)
             self.animateRecordingButton()
-            
+            if flashOff.isHidden == true { toggleTorchOn() }
         }
-        
     }
     
     override func viewDidLoad() {
@@ -300,38 +325,6 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     }
     
     
-    // MARK: Take Photo
-    
-    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
-        if let photoSampleBuffer = photoSampleBuffer {
-            photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
-            let photoDataProvider = CGDataProvider(data: photoData as! CFData)
-            let cgImagePhotoRef = CGImage(jpegDataProviderSource: photoDataProvider!, decode: nil, shouldInterpolate: true, intent: .absoluteColorimetric)
-            let currentCameraInput: AVCaptureInput = (cameraSession.inputs.first as? AVCaptureInput)!
-            if let cameraInput = currentCameraInput as? AVCaptureDeviceInput {
-                if (cameraInput.device.position == .back) {
-                    let newPhoto = UIImage(cgImage: cgImagePhotoRef!, scale: UIScreen.main.scale, orientation: UIImageOrientation.right)
-                    let reviewVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReviewVC") as! ReviewViewController
-                    reviewVC.captureContent = newPhoto
-                    print("Photo captured by back-facing camera, sent to ReviewViewController")
-                    DispatchQueue.main.async { self.present(reviewVC, animated: false, completion: nil) }
-                }
-                if (cameraInput.device.position == .front) {
-                    let newPhoto = UIImage(cgImage: cgImagePhotoRef!, scale: UIScreen.main.scale, orientation: UIImageOrientation.leftMirrored)
-                    let reviewVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReviewVC") as! ReviewViewController
-                    reviewVC.captureContent = newPhoto
-                    print("Photo captured by front-facing camera, sent to ReviewViewController")
-                    DispatchQueue.main.async { self.present(reviewVC, animated: false, completion: nil) }
-                }
-            }
-        }
-        else {
-            print("Error capturing photo: \(error)")
-            return
-        }
-    }
-    
-    
     // MARK: Take Video
     
     private func videoFileLocation() -> String {
@@ -351,24 +344,16 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             self.cameraStateBar.alpha = 0
         })
         UIView.animate(withDuration: 2, delay: 0, options: [.repeat, .autoreverse], animations: { () -> Void in
-            self.circleShutter.transform = CGAffineTransform(scaleX: 1.2, y: 1.2)
+            self.circleShutter.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
+            self.progressCircle.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
         })
     }
     
-    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
-        return
-    }
-    
-    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
-        print("Finished recording: \(outputFileURL)")
-        self.outputFileLocation = outputFileURL
-        
-        // SHOULD RECOGNIZE IF FRONT/BACK CAMERA && INSTANTIATE VIEWREVIEWVC...LIKE A PHOTO!!!
-    }
     
     
     
-    // MARK: Camera Functions
+    
+    // MARK: Camera Helpers
     
     private func moveCameraStateBar() {
         let duration = 0.25
@@ -388,17 +373,10 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         view.frame.origin = translation
         if gesture.state == .ended {
             let velocity = gesture.velocity(in: view)
-            if velocity.x >= 2500 {
-                self.dismiss(animated: true, completion: nil)
-                print("Camera capture session dismissed via drag gesture")
-            }
-            else { UIView.animate(withDuration: 0.3, animations: { self.view.frame.origin = CGPoint(x: 0, y: 0) }) }
             if velocity.y >= 1500 {
                 self.dismiss(animated: true, completion: nil)
                 print("Camera capture session dismissed via drag gesture")
-            }
-            else { UIView.animate(withDuration: 0.3, animations: { self.view.frame.origin = CGPoint(x: 0, y: 0) }) }
-        }
+            } else { UIView.animate(withDuration: 0.3, animations: { self.view.frame.origin = CGPoint(x: 0, y: 0) }) } }
     }
     
     internal override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -460,11 +438,36 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         print("User switch camera view")
     }
     
+    private func toggleTorchOn() {
+        if camera.hasTorch {
+            do {
+                try camera.lockForConfiguration()
+                let torchOn = !camera.isTorchActive
+                try camera.setTorchModeOnWithLevel(1.0)
+                camera.torchMode = torchOn ? .on : .off
+                camera.unlockForConfiguration()
+            } catch { print("Error turning on torch for capture") }
+        }
+    }
+    
     private func cameraWithPosition(position: AVCaptureDevicePosition) -> AVCaptureDevice? {
         if let cameraDiscovery = AVCaptureDeviceDiscoverySession(deviceTypes: [.builtInWideAngleCamera], mediaType: AVMediaTypeVideo, position: .unspecified) {
             for camera in cameraDiscovery.devices { if camera.position == position { return camera }}
         }
         return nil
+    }
+    
+    private func VideoOrientation() -> AVCaptureVideoOrientation {
+        var videoOrientation: AVCaptureVideoOrientation!
+        let orientation: UIDeviceOrientation = UIDevice.current.orientation
+        switch orientation {
+        case .portrait : videoOrientation = .portrait
+        case .landscapeRight : videoOrientation = .landscapeLeft
+        case .landscapeLeft : videoOrientation = .landscapeRight
+        case .portraitUpsideDown : videoOrientation = .portraitUpsideDown
+        default : videoOrientation = .portrait
+        }
+        return videoOrientation
     }
     
     private func startContinuousFocusExposure() {
@@ -484,15 +487,20 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         }
     }
     
-    private func readyAudio() {
-        // Add Audio Input
+    private func toggleAudioInput() {
         do {
             let audioDevice = AVCaptureDevice.defaultDevice(withMediaType: AVMediaTypeAudio)
             let audioInput = try AVCaptureDeviceInput(device: audioDevice)
-            if cameraSession.canAddInput(audioInput) {
-                cameraSession.addInput(audioInput)
-                print("Audio added to the camera session")
-            } else { print("Could not add audio to the camera session") }
+            if videoCamera.alpha == 1 {
+                if cameraSession.canAddInput(audioInput) {
+                    cameraSession.addInput(audioInput)
+                    print("Audio added to the camera session")
+                }
+            }
+            if videoCamera.alpha != 1 {
+                cameraSession.removeInput(audioInput)
+                print("Audio removed from the camera session")
+            }
         } catch { print("Could not create an audio device input: \(error)") }
     }
     
@@ -509,33 +517,8 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         view.insertSubview(circleShutter, at: 2)
         circleShutter.addSubview(blurEffectView)
         
-        let shutterProgressPath = UIBezierPath(arcCenter: circleShutter.center, radius: CGFloat(circleRadius + 5), startAngle: 0.0, endAngle: CGFloat(M_PI * 2), clockwise: true)
-        let cameraProgress = CAShapeLayer()
-        cameraProgress.path = shutterProgressPath.cgPath
-        cameraProgress.fillColor = UIColor.clear.cgColor
-        cameraProgress.strokeColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0).cgColor
-        cameraProgress.lineWidth = 5.0
-        cameraProgress.strokeEnd = 0.0
-        view.layer.addSublayer(cameraProgress)
-    }
-    
-    //    private func createCameraProgressStatus() {
-    //        cameraProgress.path = shutterProgressPath.cgPath
-    //        cameraProgress.fillColor = UIColor.clear.cgColor
-    //        cameraProgress.strokeColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0).cgColor
-    //        cameraProgress.lineWidth = 5.0
-    //        cameraProgress.strokeEnd = 0.0
-    //        circleShutter.layer.addSublayer(cameraProgress)
-    //    }
-    
-    private func animateCameraProgressStatus() {
-        let animation = CABasicAnimation(keyPath: "strokeEnd")
-        animation.duration = 60
-        animation.fromValue = 0
-        animation.toValue = 1
-        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
-        cameraProgress.strokeEnd = 1.0
-        cameraProgress.add(animation, forKey: "animateCircle")
+        view.insertSubview(progressCircle, belowSubview: circleShutter)
+        
     }
     
     private func createCameraStateBar() {
@@ -550,7 +533,54 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         view.addSubview(cameraStateBar)
     }
     
+}
+
+// MARK: Capture Photo Delegate Methods
+extension MainCameraViewController: AVCapturePhotoCaptureDelegate {
     
+    func capture(_ captureOutput: AVCapturePhotoOutput, didFinishProcessingPhotoSampleBuffer photoSampleBuffer: CMSampleBuffer?, previewPhotoSampleBuffer: CMSampleBuffer?, resolvedSettings: AVCaptureResolvedPhotoSettings, bracketSettings: AVCaptureBracketedStillImageSettings?, error: Error?) {
+        if let photoSampleBuffer = photoSampleBuffer {
+            photoData = AVCapturePhotoOutput.jpegPhotoDataRepresentation(forJPEGSampleBuffer: photoSampleBuffer, previewPhotoSampleBuffer: previewPhotoSampleBuffer)
+            let photoDataProvider = CGDataProvider(data: photoData as! CFData)
+            let cgImagePhotoRef = CGImage(jpegDataProviderSource: photoDataProvider!, decode: nil, shouldInterpolate: true, intent: .absoluteColorimetric)
+            let currentCameraInput: AVCaptureInput = (cameraSession.inputs.first as? AVCaptureInput)!
+            if let cameraInput = currentCameraInput as? AVCaptureDeviceInput {
+                if (cameraInput.device.position == .back) {
+                    let newPhoto = UIImage(cgImage: cgImagePhotoRef!, scale: UIScreen.main.scale, orientation: UIImageOrientation.right)
+                    let reviewVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReviewVC") as! ReviewViewController
+                    reviewVC.captureContent = newPhoto
+                    print("Photo captured by back-facing camera, sent to ReviewViewController")
+                    DispatchQueue.main.async { self.present(reviewVC, animated: false, completion: nil) }
+                }
+                if (cameraInput.device.position == .front) {
+                    let newPhoto = UIImage(cgImage: cgImagePhotoRef!, scale: UIScreen.main.scale, orientation: UIImageOrientation.leftMirrored)
+                    let reviewVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReviewVC") as! ReviewViewController
+                    reviewVC.captureContent = newPhoto
+                    print("Photo captured by front-facing camera, sent to ReviewViewController")
+                    DispatchQueue.main.async { self.present(reviewVC, animated: false, completion: nil) }
+                }
+            }
+        }
+        else {
+            print("Error capturing photo: \(error)")
+            return
+        }
+    }
+}
+
+// MARK: Capture Video Delegate Methods
+extension MainCameraViewController: AVCaptureFileOutputRecordingDelegate {
+    
+    func capture(_ captureOutput: AVCaptureFileOutput!, didStartRecordingToOutputFileAt fileURL: URL!, fromConnections connections: [Any]!) {
+        return
+    }
+    
+    func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
+        print("Finished recording: \(outputFileURL)")
+        self.outputFileLocation = outputFileURL
+        
+        // SHOULD RECOGNIZE IF FRONT/BACK CAMERA && INSTANTIATE VIEWREVIEWVC...LIKE A PHOTO!!!
+    }
 }
 
 extension UIView {
@@ -562,25 +592,35 @@ extension UIView {
     }
 }
 
+// MARK: Time Progress Indicator (Video Capture)
 class CameraProgress: UIView {
     var progressLayer: CAShapeLayer!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         self.backgroundColor = UIColor.clear
-        let progressPath = UIBezierPath(arcCenter: self.center, radius: 115 / 2, startAngle: 0.0, endAngle: CGFloat(M_PI * 2.0), clockwise: true)
+        let progressPath = UIBezierPath(arcCenter: CGPoint(x: frame.size.width / 2.0, y: frame.size.height / 2.0), radius: 115 / 2, startAngle: CGFloat(-M_PI_2), endAngle: CGFloat((M_PI * 2.0) - M_PI_2), clockwise: true)
         progressLayer = CAShapeLayer()
         progressLayer.path = progressPath.cgPath
         progressLayer.fillColor = UIColor.clear.cgColor
         progressLayer.strokeColor = UIColor(red: 0.91, green: 0.30, blue: 0.24, alpha: 1.0).cgColor
-        progressLayer.lineWidth = 5.0
+        progressLayer.lineWidth = 10.0
         progressLayer.strokeEnd = 0.0
         layer.addSublayer(progressLayer)
+        
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    // func animateProgress
+    func animateProgress(duration: TimeInterval, fromValue: CGFloat, toValue: CGFloat) {
+        let animation = CABasicAnimation(keyPath: "strokeEnd")
+        animation.duration = duration
+        animation.fromValue = fromValue
+        animation.toValue = toValue
+        animation.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionLinear)
+        progressLayer.strokeEnd = toValue
+        progressLayer.add(animation, forKey: "animateCircle")
+    }
 }
