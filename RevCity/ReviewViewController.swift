@@ -56,6 +56,8 @@ class ReviewViewController: UIViewController {
         blurView.alpha = 0
         blurImageResult.alpha = 0
         buttonShadows()
+        createLocationBackground()
+        createGoPostBackground()
     }
     
     @IBOutlet weak var returnCamera: UIButton!
