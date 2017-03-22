@@ -246,10 +246,10 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
                 pauseAnimation(view: progressCircle)
                 print("Camera video recording ended")
                 
-                // SEGUE to VideoReviewVC
-                
                 resetAnimation(view: circleShutter)
                 resetAnimation(view: progressCircle)
+                
+                // BUG IN RETURNING TO VIEW WITH STROKE STILL BEING PRESENT & FAILING TO REACTIVATE ANIMATION
             }
         }
     }
@@ -601,6 +601,9 @@ extension MainCameraViewController {
     func capture(_ captureOutput: AVCaptureFileOutput!, didFinishRecordingToOutputFileAt outputFileURL: URL!, fromConnections connections: [Any]!, error: Error!) {
         print("Finished recording: \(outputFileURL)")
         self.outputFileLocation = outputFileURL
+        
+        let reviewVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "ReviewVC") as! ReviewViewController
+        DispatchQueue.main.async { self.present(reviewVC, animated: false, completion: nil) }
         
         // SHOULD RECOGNIZE IF FRONT/BACK CAMERA && INSTANTIATE VIEWREVIEWVC...LIKE A PHOTO!!!
     }

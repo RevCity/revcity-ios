@@ -7,12 +7,16 @@
 //
 
 import UIKit
+import AVKit
+import AVFoundation
 import QuartzCore
 import CoreImage
 
 class ReviewViewController: UIViewController {
     
     var captureContent: UIImage?
+    var videoPlayerController = AVPlayerViewController()
+    var videoPlayer: AVPlayer?
     
     @IBOutlet weak var imageView: UIImageView!
     
@@ -47,6 +51,15 @@ class ReviewViewController: UIViewController {
             imageView.layer.cornerRadius = 12.0
             imageView.clipsToBounds = true
         }
+
+        
+        
+        let videoURL: NSURL? = NSURL(fileURLWithPath: "revVideo", isDirectory: true)
+        if let previewVideoURL = videoURL {
+            self.videoPlayer = AVPlayer(url: previewVideoURL as URL)
+            self.videoPlayerController.player = self.videoPlayer
+        }
+        
         tapticFeedback()
     }
     
