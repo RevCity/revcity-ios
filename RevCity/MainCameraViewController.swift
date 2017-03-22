@@ -10,7 +10,7 @@ import UIKit
 import AVFoundation
 import CoreMedia
 
-class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureFileOutputRecordingDelegate {
+class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate, AVCaptureFileOutputRecordingDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
     
     
     // MARK: Camera Outlets
@@ -46,6 +46,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     let cameraSession = AVCaptureSession()
     private let cameraPhotoOutput = AVCapturePhotoOutput()
     private let cameraVideoOutput = AVCaptureMovieFileOutput()
+    private let cameraDataOutput = AVCaptureVideoDataOutput()
     private let cameraStateBar = UIView()
     
     
@@ -54,7 +55,7 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     
     private func createCamera() {
         cameraSession.beginConfiguration()
-        cameraSession.sessionPreset = AVCaptureSessionPresetPhoto
+        cameraSession.sessionPreset = AVCaptureSessionPresetHigh
         cameraSession.automaticallyConfiguresCaptureDeviceForWideColor = true
         
         // Add Camera Input
@@ -88,6 +89,15 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             cameraSession.commitConfiguration()
             return
         }
+        
+        // Set Video Data Output
+        cameraDataOutput.videoSettings = nil
+        cameraDataOutput.alwaysDiscardsLateVideoFrames = true
+        if cameraSession.canAddOutput(cameraDataOutput) {
+            cameraSession.addOutput(cameraDataOutput)
+        }
+        let videoQueue = DispatchQueue(label: "com.revcity.videoCaptureQueue")
+        cameraDataOutput.setSampleBufferDelegate(self, queue: videoQueue)
         
         cameraSession.commitConfiguration()
         
@@ -220,18 +230,27 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
         
         // Take a Video (video preselected)
         if videoCamera.alpha == 1 {
-//            if self.cameraVideoOutput.isRecording { self.cameraVideoOutput.stopRecording() }
-//            else {
-//                //let videoURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-//                //let videoFilePath = videoURL.appendingPathComponent("temp")
-//                self.cameraVideoOutput.connection(withMediaType: AVMediaTypeVideo).videoOrientation = self.VideoOrientation()
-//                self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
-//                self.cameraVideoOutput.startRecording(toOutputFileURL: URL(fileURLWithPath: self.videoFileLocation()),
-//                                                      recordingDelegate: self)
-//            }
+            let videoURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            let videoPath = videoURL.appendingPathComponent("revVideo")
+            self.cameraVideoOutput.maxRecordedDuration = self.maxRecordedDuration()
+            cameraVideoOutput.startRecording(toOutputFileURL: videoPath, recordingDelegate: self)
             progressCircle.animateProgress(duration: 60, fromValue: 0, toValue: 1)
             self.animateRecordingButton()
             if flashOff.isHidden == true { toggleTorchOn() }
+            print("Camera video recording started")
+        }
+        if videoCamera.alpha == 0 {
+            if self.cameraVideoOutput.isRecording {
+                self.cameraVideoOutput.stopRecording()
+                pauseAnimation(view: circleShutter)
+                pauseAnimation(view: progressCircle)
+                print("Camera video recording ended")
+                
+                // SEGUE to VideoReviewVC
+                
+                resetAnimation(view: circleShutter)
+                resetAnimation(view: progressCircle)
+            }
         }
     }
     
@@ -327,10 +346,6 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
     
     // MARK: Take Video
     
-    private func videoFileLocation() -> String {
-        return NSTemporaryDirectory().appending("videoFile.mov")
-    }
-    
     private func maxRecordedDuration() -> CMTime {
         let seconds: Int64 = 60
         let preferredTimeScale: Int32 = 1
@@ -343,14 +358,22 @@ class MainCameraViewController: UIViewController, AVCapturePhotoCaptureDelegate,
             for button in self.floatingButtons { button.alpha = 0 }
             self.cameraStateBar.alpha = 0
         })
-        UIView.animate(withDuration: 2, delay: 0, options: [.repeat, .autoreverse], animations: { () -> Void in
+        UIView.animate(withDuration: 2, delay: 0 ,options: [.repeat, .autoreverse], animations: { () -> Void in
             self.circleShutter.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
             self.progressCircle.transform = CGAffineTransform(scaleX: 1.25, y: 1.25)
         })
     }
     
+    private func pauseAnimation(view: UIView) {
+        let pausedTime: CFTimeInterval = view.layer.convertTime(CACurrentMediaTime(), from: nil)
+        view.layer.speed = 0.0
+        view.layer.timeOffset = pausedTime
+    }
     
-    
+    private func resetAnimation(view: UIView) {
+        view.layer.removeAllAnimations()
+        view.layer.transform = CATransform3DIdentity
+    }
     
     
     // MARK: Camera Helpers

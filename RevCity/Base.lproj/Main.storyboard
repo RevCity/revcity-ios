@@ -369,7 +369,6 @@
                         <outletCollection property="reviewButtons" destination="Zi7-eK-Ecs" collectionClass="NSMutableArray" id="Zfo-By-4E9"/>
                         <outletCollection property="reviewButtons" destination="jS2-7U-MY0" collectionClass="NSMutableArray" id="rLX-15-8Vb"/>
                         <outletCollection property="reviewButtons" destination="pcN-0w-fMj" collectionClass="NSMutableArray" id="hN6-D5-V76"/>
-                        <outletCollection property="reviewButtons" destination="DNh-9E-6Km" collectionClass="NSMutableArray" id="SK8-mP-qlV"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="o7i-hG-Akl" userLabel="First Responder" sceneMemberID="firstResponder"/>

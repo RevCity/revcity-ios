@@ -141,19 +141,19 @@
 			isa = PBXGroup;
 			children = (
 				4AD128B51E6B7D370087D486 /* RevCity.entitlements */,
-				4AD128851E6B7D0C0087D486 /* AppDelegate.swift */,
+				4AD128901E6B7D0C0087D486 /* LaunchScreen.storyboard */,
+				7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */,
 				4AD1288B1E6B7D0C0087D486 /* Main.storyboard */,
+				4AD128851E6B7D0C0087D486 /* AppDelegate.swift */,
+				4AD128FF1E6CA4370087D486 /* CustomTabBarController.swift */,
+				7F54DCFB1E80351000E703DA /* TabBarController.swift */,
 				4AD128B91E6BA7C10087D486 /* ExploreViewController.swift */,
 				4AD128BB1E6C69910087D486 /* SearchViewController.swift */,
 				4AAABD041E7AED11009610E1 /* CameraViewControllers */,
 				4AD128BD1E6C69D10087D486 /* ChatViewController.swift */,
 				4AD128BF1E6C69F20087D486 /* ProfileViewController.swift */,
 				4AD1288E1E6B7D0C0087D486 /* Assets.xcassets */,
-				4AD128FF1E6CA4370087D486 /* CustomTabBarController.swift */,
-				7F54DCFB1E80351000E703DA /* TabBarController.swift */,
-				4AD128901E6B7D0C0087D486 /* LaunchScreen.storyboard */,
 				4AD128931E6B7D0C0087D486 /* Info.plist */,
-				7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */,
 				7FE620101E7EDAE20027BE7E /* UIColor+.swift */,
 			);
 			path = RevCity;
