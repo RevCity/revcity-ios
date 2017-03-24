@@ -10,26 +10,27 @@ import UIKit
 import FacebookCore
 import FacebookLogin
 
-/* View presented when a user is not logged in */
 class LoginViewController: UIViewController {
     
-    /** Required **/
     override func viewDidLoad() {
         super.viewDidLoad()
 
         layoutSubviews()
         
         if let accessToken = AccessToken.current {
-            print(" We are logged in with access token \(accessToken)")
+            print(" We are logged in with Facebook access token \(accessToken)")
         }
+        
+        let idToken = "..."
+        
+        LoginRequest(idToken: idToken, timestamp: Date())
+            .make(onSuccess: { sessionCode in
+                print(sessionCode)
+            }, onFailure: { error in
+                print(error.localizedDescription)
+            })
+        
     }
-    
-    
-    /** Required **/
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-    }
-    
     
     /** Layout the subviews / add selectors as necessary **/
     func layoutSubviews() {
@@ -60,6 +61,7 @@ class LoginViewController: UIViewController {
                 self.successfulFBLogin()
             }
         }
+        
     }
     
     

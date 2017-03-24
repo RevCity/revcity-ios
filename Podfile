@@ -9,6 +9,8 @@ target 'RevCity' do
   pod 'FacebookCore'
   pod 'FacebookLogin'
   pod 'FacebookShare'
+  pod 'Alamofire'
+  pod 'SwiftyJSON'
 
 end
 

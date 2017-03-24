@@ -41,9 +41,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         SDKApplicationDelegate.shared.application(application, didFinishLaunchingWithOptions: launchOptions)
         
         /* Establish initial view */
-        // window = UIWindow()
-        // window?.rootViewController = loginViewController
-        // window?.makeKeyAndVisible()
+         window = UIWindow()
+         window?.rootViewController = loginViewController
+         window?.makeKeyAndVisible()
         
         return true
     }

@@ -23,6 +23,8 @@
 		4AD128C01E6C69F20087D486 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD128BF1E6C69F20087D486 /* ProfileViewController.swift */; };
 		4AD129001E6CA4370087D486 /* CustomTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD128FF1E6CA4370087D486 /* CustomTabBarController.swift */; };
 		4AD129021E6CEDCF0087D486 /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4AD129011E6CEDCF0087D486 /* ReviewViewController.swift */; };
+		6545C34F1E85B0DB00E4099D /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6545C34E1E85B0DB00E4099D /* NetworkRequest.swift */; };
+		6545C3511E85BFB800E4099D /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6545C3501E85BFB800E4099D /* Requests.swift */; };
 		7F54DCFC1E80351000E703DA /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F54DCFB1E80351000E703DA /* TabBarController.swift */; };
 		7FE6200F1E7ED2980027BE7E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */; };
 		7FE620111E7EDAE20027BE7E /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE620101E7EDAE20027BE7E /* UIColor+.swift */; };
@@ -69,6 +71,8 @@
 		4AD128BF1E6C69F20087D486 /* ProfileViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		4AD128FF1E6CA4370087D486 /* CustomTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomTabBarController.swift; sourceTree = "<group>"; };
 		4AD129011E6CEDCF0087D486 /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
+		6545C34E1E85B0DB00E4099D /* NetworkRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
+		6545C3501E85BFB800E4099D /* Requests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 		66670A3DF2F01726A5F46D3C /* Pods_RevCityTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RevCityTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		668B513E173F377E124F3135 /* Pods-RevCity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevCity.release.xcconfig"; path = "Pods/Target Support Files/Pods-RevCity/Pods-RevCity.release.xcconfig"; sourceTree = "<group>"; };
 		7F54DCFB1E80351000E703DA /* TabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
@@ -140,11 +144,12 @@
 		4AD128841E6B7D0C0087D486 /* RevCity */ = {
 			isa = PBXGroup;
 			children = (
+				4AD128851E6B7D0C0087D486 /* AppDelegate.swift */,
 				4AD128B51E6B7D370087D486 /* RevCity.entitlements */,
 				4AD128901E6B7D0C0087D486 /* LaunchScreen.storyboard */,
-				7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */,
 				4AD1288B1E6B7D0C0087D486 /* Main.storyboard */,
-				4AD128851E6B7D0C0087D486 /* AppDelegate.swift */,
+				6545C34C1E85AF6B00E4099D /* Login */,
+				6545C34D1E85B0BD00E4099D /* Networking */,
 				4AD128FF1E6CA4370087D486 /* CustomTabBarController.swift */,
 				7F54DCFB1E80351000E703DA /* TabBarController.swift */,
 				4AD128B91E6BA7C10087D486 /* ExploreViewController.swift */,
@@ -186,6 +191,23 @@
 				9444488AA34DA0F75ED38702 /* Pods_RevCityUITests.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6545C34C1E85AF6B00E4099D /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		6545C34D1E85B0BD00E4099D /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				6545C34E1E85B0DB00E4099D /* NetworkRequest.swift */,
+				6545C3501E85BFB800E4099D /* Requests.swift */,
+			);
+			name = Networking;
 			sourceTree = "<group>";
 		};
 		74D990575593D50616D907D0 /* Pods */ = {
@@ -368,7 +390,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		DD739AC2B0DCBBA60B2DD66C /* [CP] Embed Pods Frameworks */ = {
@@ -393,10 +415,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6545C34F1E85B0DB00E4099D /* NetworkRequest.swift in Sources */,
 				4AD128BC1E6C69910087D486 /* SearchViewController.swift in Sources */,
 				4AD129001E6CA4370087D486 /* CustomTabBarController.swift in Sources */,
 				4AD128BA1E6BA7C10087D486 /* ExploreViewController.swift in Sources */,
 				4AD128C01E6C69F20087D486 /* ProfileViewController.swift in Sources */,
+				6545C3511E85BFB800E4099D /* Requests.swift in Sources */,
 				7FE620111E7EDAE20027BE7E /* UIColor+.swift in Sources */,
 				4AD128BE1E6C69D10087D486 /* ChatViewController.swift in Sources */,
 				4AD128861E6B7D0C0087D486 /* AppDelegate.swift in Sources */,
