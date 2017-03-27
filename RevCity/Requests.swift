@@ -9,8 +9,8 @@
 import Foundation
 import SwiftyJSON
 
-struct LoginRequest: NetworkRequestable {
-    typealias T = Int
+struct LoginRequest: NetworkRequest {
+    typealias ResponseType = Int
     
     let idToken: String
     let timestamp: Date
@@ -25,7 +25,7 @@ struct LoginRequest: NetworkRequestable {
         ]
     }
     
-    func process(json: JSON) -> T {
+    func process(json: JSON) -> Int {
         return json["session_code"].intValue
     }
 }

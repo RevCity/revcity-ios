@@ -9,10 +9,14 @@
 import Alamofire
 import SwiftyJSON
 
-let revBaseURL: String = "http://localhost:8080"
+let ROOT_URL = "http://localhost:8080"
 
-protocol NetworkRequestable {
-    associatedtype T
+/*
+ An `NetworkRequest` is a protocol to which structs can conform to create expressive REST API requests.
+ */
+protocol NetworkRequest {
+    associatedtype ResponseType
+    
     var baseURL: String { get }
     var route: String { get }
     var method: HTTPMethod { get }
@@ -20,29 +24,53 @@ protocol NetworkRequestable {
     var encoding: ParameterEncoding { get }
     var headers: HTTPHeaders? { get }
     
-    func process(json: JSON) -> T
+    func process(json: JSON) throws -> ResponseType
 }
 
-extension NetworkRequestable {
-    var baseURL: String { return revBaseURL }
-    var route: String { return "/" }
+extension NetworkRequest {
+    
+    var baseURL: String { return ROOT_URL }
+    var route: String { return "" }
     var method: HTTPMethod { return .get }
     var parameters: [String : Any] { return [:] }
-    var encoding: ParameterEncoding { return method == .get ? URLEncoding.default : JSONEncoding.default }
+    var encoding: ParameterEncoding { return URLEncoding.default }
     var headers: HTTPHeaders? { return nil }
     
-    func make(onSuccess: ((T) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+    func make(onSuccess: ((ResponseType) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
         Alamofire.request(URL(string: baseURL + route)!, method: method, parameters: parameters, encoding: encoding, headers: headers)
             .validate()
             .responseJSON { response in
                 switch response.result {
                 case .success(let data):
-                    onSuccess?(self.process(json: JSON(data)))
+                    do {
+                        let response = try self.process(json: JSON(data))
+                        onSuccess?(response)
+                    } catch(let error) {
+                        onFailure?(error)
+                    }
                 case .failure(let error):
                     onFailure?(error)
                 }
         }
     }
+    
+    func queue(on queue: OperationQueue, onSuccess: ((ResponseType) -> Void)? = nil, onFailure: ((Error) -> Void)? = nil) {
+        queue.addOperation {
+            self.make(onSuccess: onSuccess, onFailure: onFailure)
+        }
+    }
 }
 
-
+/*
+ `ADNetworkError` represents custom errors from backend responses
+ */
+enum NetworkError: Error {
+    case badJsonFormatting
+    
+    var localizedDescription: String {
+        switch self {
+        case .badJsonFormatting:
+            return "Unexpected values in JSON"
+        }
+    }
+}

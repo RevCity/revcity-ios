@@ -11,6 +11,7 @@ target 'RevCity' do
   pod 'FacebookShare'
   pod 'Alamofire'
   pod 'SwiftyJSON'
+  pod 'Google/SignIn'
 
 end
 

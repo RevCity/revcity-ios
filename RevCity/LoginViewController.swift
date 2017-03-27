@@ -7,51 +7,74 @@
 //
 
 import UIKit
+import GoogleSignIn
 import FacebookCore
 import FacebookLogin
 
-class LoginViewController: UIViewController {
+class LoginViewController: UIViewController, GIDSignInUIDelegate {
+    
+    enum LoginType {
+        case signUp
+        case signIn
+    }
+    
+    var loginType: LoginType!
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        layoutSubviews()
+        setupCloseButton()
+        setupForm()
         
         if let accessToken = AccessToken.current {
             print(" We are logged in with Facebook access token \(accessToken)")
         }
         
-        let idToken = "..."
+    }
+    
+    func setupCloseButton() {
+        let margin: CGFloat = 16.0
+        let size: CGFloat = 44.0
         
-        LoginRequest(idToken: idToken, timestamp: Date())
-            .make(onSuccess: { sessionCode in
-                print(sessionCode)
-            }, onFailure: { error in
-                print(error.localizedDescription)
-            })
-        
+        let closeButton = UIButton(frame: CGRect(x: margin, y: margin, width: size, height: size))
+        closeButton.setTitle("Close", for: .normal)
+        closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
+        view.addSubview(closeButton)
     }
     
     /** Layout the subviews / add selectors as necessary **/
-    func layoutSubviews() {
+    func setupForm() {
         
-        /* Facebook Login Button */
-        let loginButton = UIButton(type: .custom)
-        loginButton.backgroundColor = UIColor.facebookBlue
-        loginButton.frame = CGRect(x: 0, y: 0, width: 300, height: 40)
-        loginButton.center = view.center
-        loginButton.setTitle("Login to RevCity with Facebook", for: .normal)
-        loginButton.addTarget(self, action: #selector(self.fbLoginButtonClicked), for: .touchUpInside)
+        let margin: CGFloat = 44.0
+        let height: CGFloat = 44.0
+        let buttonMargin: CGFloat = 8.0
         
-        /* Add subviews */
-        view.addSubview(loginButton)
+        let form = UIView()
+        form.backgroundColor = .clear
+        
+        let googleLoginButton = GIDSignInButton(frame: CGRect(x: margin, y: 0.0, width: view.frame.width - (margin * 2), height: height))
+        googleLoginButton.style = .wide
+        form.addSubview(googleLoginButton)
+        
+        let facebookLoginButton = UIButton(frame: CGRect(x: margin, y: googleLoginButton.frame.maxY + buttonMargin, width: view.frame.width - (margin * 2), height: height))
+        facebookLoginButton.backgroundColor = .facebookBlue
+        facebookLoginButton.setTitle("Login to RevCity with Facebook", for: .normal)
+        facebookLoginButton.addTarget(self, action: #selector(tappedFacebookLogin), for: .touchUpInside)
+        form.addSubview(facebookLoginButton)
+        
+        form.sizeToFit()
+        form.center = view.center
+        view.addSubview(form)
     }
     
+    func closeTapped() {
+        dismiss(animated: true, completion: nil)
+    }
     
     /** Facebook Login button clicked -> react accordingly **/
-    func fbLoginButtonClicked() {
+    func tappedFacebookLogin() {
         let loginManager = LoginManager()
-        loginManager.logIn([.publicProfile, .email], viewController: self) { (loginResult) in
+        loginManager.logIn([.publicProfile, .email], viewController: self) { loginResult in
             switch loginResult {
             case .failed(let error):
                 print(error)
