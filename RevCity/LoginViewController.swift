@@ -26,6 +26,8 @@ class LoginViewController: UIViewController, GIDSignInUIDelegate {
         setupCloseButton()
         setupForm()
         
+        view.backgroundColor = .white
+        
         if let accessToken = AccessToken.current {
             print(" We are logged in with Facebook access token \(accessToken)")
         }
@@ -50,26 +52,27 @@ class LoginViewController: UIViewController, GIDSignInUIDelegate {
         let buttonMargin: CGFloat = 8.0
         
         let form = UIView()
-        form.backgroundColor = .clear
-        
-        let googleLoginButton = GIDSignInButton(frame: CGRect(x: margin, y: 0.0, width: view.frame.width - (margin * 2), height: height))
+
+        let googleLoginButton = GIDSignInButton(frame: CGRect(x: 0.0, y: 0.0, width: view.frame.width - (margin * 2), height: height))
         googleLoginButton.style = .wide
         form.addSubview(googleLoginButton)
         
-        let facebookLoginButton = UIButton(frame: CGRect(x: margin, y: googleLoginButton.frame.maxY + buttonMargin, width: view.frame.width - (margin * 2), height: height))
+        let facebookLoginButton = UIButton(frame: CGRect(x: 0.0, y: googleLoginButton.frame.maxY + buttonMargin, width: view.frame.width - (margin * 2), height: height))
         facebookLoginButton.backgroundColor = .facebookBlue
-        facebookLoginButton.setTitle("Login to RevCity with Facebook", for: .normal)
+        facebookLoginButton.setTitle("Sign in with Facebook", for: .normal)
         facebookLoginButton.addTarget(self, action: #selector(tappedFacebookLogin), for: .touchUpInside)
         form.addSubview(facebookLoginButton)
         
-        form.sizeToFit()
+        form.resizeToFitSubviews()
         form.center = view.center
         view.addSubview(form)
     }
     
+    
     func closeTapped() {
         dismiss(animated: true, completion: nil)
     }
+    
     
     /** Facebook Login button clicked -> react accordingly **/
     func tappedFacebookLogin() {

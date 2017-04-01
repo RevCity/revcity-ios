@@ -27,6 +27,7 @@
 		653475531E88B4C0005E8C07 /* SplashViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653475521E88B4C0005E8C07 /* SplashViewController.swift */; };
 		6545C34F1E85B0DB00E4099D /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6545C34E1E85B0DB00E4099D /* NetworkRequest.swift */; };
 		6545C3511E85BFB800E4099D /* Requests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6545C3501E85BFB800E4099D /* Requests.swift */; };
+		7F8198E41E9011F300185732 /* UIView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F8198E31E9011F300185732 /* UIView+.swift */; };
 		7FE6200F1E7ED2980027BE7E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */; };
 		7FE620111E7EDAE20027BE7E /* UIColor+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7FE620101E7EDAE20027BE7E /* UIColor+.swift */; };
 /* End PBXBuildFile section */
@@ -78,6 +79,7 @@
 		6545C3501E85BFB800E4099D /* Requests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Requests.swift; sourceTree = "<group>"; };
 		66670A3DF2F01726A5F46D3C /* Pods_RevCityTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RevCityTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		668B513E173F377E124F3135 /* Pods-RevCity.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RevCity.release.xcconfig"; path = "Pods/Target Support Files/Pods-RevCity/Pods-RevCity.release.xcconfig"; sourceTree = "<group>"; };
+		7F8198E31E9011F300185732 /* UIView+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIView+.swift"; sourceTree = "<group>"; };
 		7FE6200E1E7ED2980027BE7E /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		7FE620101E7EDAE20027BE7E /* UIColor+.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIColor+.swift"; sourceTree = "<group>"; };
 		9444488AA34DA0F75ED38702 /* Pods_RevCityUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RevCityUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -161,6 +163,7 @@
 				4AD128BF1E6C69F20087D486 /* ProfileViewController.swift */,
 				4AD1288E1E6B7D0C0087D486 /* Assets.xcassets */,
 				4AD128931E6B7D0C0087D486 /* Info.plist */,
+				7F8198E31E9011F300185732 /* UIView+.swift */,
 				7FE620101E7EDAE20027BE7E /* UIColor+.swift */,
 			);
 			path = RevCity;
@@ -293,7 +296,7 @@
 				TargetAttributes = {
 					4AD128811E6B7D0B0087D486 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = PD3SC938W6;
+						DevelopmentTeam = JM5V56A93B;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Maps.iOS = {
@@ -428,6 +431,7 @@
 				6545C3511E85BFB800E4099D /* Requests.swift in Sources */,
 				7FE620111E7EDAE20027BE7E /* UIColor+.swift in Sources */,
 				4AD128BE1E6C69D10087D486 /* ChatViewController.swift in Sources */,
+				7F8198E41E9011F300185732 /* UIView+.swift in Sources */,
 				4AD128861E6B7D0C0087D486 /* AppDelegate.swift in Sources */,
 				4A6A27081E78A1C5003CBEBB /* CameraLaunchViewController.swift in Sources */,
 				4AD129021E6CEDCF0087D486 /* ReviewViewController.swift in Sources */,
@@ -582,12 +586,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CF03FD5127561F8B4353DB1B /* Pods-RevCity.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RevCity/RevCity.entitlements;
-				DEVELOPMENT_TEAM = PD3SC938W6;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = JM5V56A93B;
 				INFOPLIST_FILE = RevCity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.placemakertechnologies.RevCity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.placemakertechnologies.RevCity.joe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
@@ -597,12 +603,14 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 668B513E173F377E124F3135 /* Pods-RevCity.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = RevCity/RevCity.entitlements;
-				DEVELOPMENT_TEAM = PD3SC938W6;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = JM5V56A93B;
 				INFOPLIST_FILE = RevCity/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.placemakertechnologies.RevCity;
+				PRODUCT_BUNDLE_IDENTIFIER = com.placemakertechnologies.RevCity.joe;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 3.0;
 			};
